@@ -12,4 +12,4 @@ In addition to technical skills, I also teach communication skills and important
 + State Management with BLoC: Efficiently manages app states and reduces complexity in business logic.
   
 ## Let's Connect!
-To talk and collaborate with me, you can message @Ali_asadipoor on Telegram or aliasadipoor33@gmail.com on Email.
+To talk and collaborate with me, you can message @Ali_asadipoorpv on Telegram or aliasadipoor33@gmail.com on Email.
