@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:watch_store/data/constants.dart';
+import 'package:watch_store/utils/shared_preferences_manager.dart';
 
 part 'auth_state.dart';
 
@@ -36,8 +37,11 @@ class AuthCubit extends Cubit<AuthState> {
         "mobile": mobile,
         "code": code,
       }).then((value) {
-        print(value.toString());
         if (value.statusCode == 201) {
+          SharedPreferencesManager()
+              .saveString("token", value.data["data"]["token"]);
+          SharedPreferencesManager().getString("token");
+
           if (value.data["data"]["is_registered"]) {
             emit(VerifyIsRegisterState());
           } else {
