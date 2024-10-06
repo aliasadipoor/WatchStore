@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:watch_store/components/extention.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/res/strings.dart';
 import 'package:watch_store/routes/names.dart';
+import 'package:watch_store/utils/image_handler.dart';
 import 'package:watch_store/widgets/app_text_field.dart';
 import 'package:watch_store/widgets/avatar.dart';
 import 'package:watch_store/widgets/main_button_widget.dart';
@@ -27,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _controllerLocation = TextEditingController();
   double lat = 0.0;
   double lng = 0.0;
-
+  ImageHandler imageHandler = ImageHandler();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -44,9 +46,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   AppDimens.large.height,
                   Avatar(
-                    onTap: () {},
-                    image: Assets.svg.avatar,
-                  ),
+                      onTap: () async => await imageHandler
+                          .pickAndCropImage(source: ImageSource.gallery)
+                          .then((value) => setState(() {})),
+                      file: imageHandler.getIamge ),
                   AppTextField(
                     lable: AppStrings.nameLastName,
                     hint: AppStrings.hintNameLastName,
