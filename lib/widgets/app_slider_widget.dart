@@ -1,37 +1,21 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_store/data/model/slide.dart';
 import 'package:watch_store/res/dimens.dart';
-
-final List<String> imgList = [
-  "https://tiktakgallery.com/wp-content/uploads/2022/02/TICWATCH-PRO.jpg",
-  "https://tiktakgallery.com/wp-content/uploads/2018/10/A1.391.14.838...jpg",
-  "https://tiktakgallery.com/wp-content/uploads/2018/10/CATERPILLAR-LE.111.27.137...jpg",
-  "https://tiktakgallery.com/wp-content/uploads/2022/03/GARMIN-Garmin-FORERUNNER-45S-LRIS-01.jpg",
-];
 
 class AppSliderWidget extends StatefulWidget {
   const AppSliderWidget({
     super.key,
     required this.imgList,
   });
-  final List<String> imgList;
+  final List<Slide> imgList;
   @override
   State<AppSliderWidget> createState() => _AppSliderWidgetState();
 }
 
 class _AppSliderWidgetState extends State<AppSliderWidget> {
   final CarouselController _controller = CarouselController();
-  final List<Widget> items = imgList
-      .map((e) => Padding(
-            padding: const EdgeInsets.all(AppDimens.medium),
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppDimens.medium),
-                child: Image.network(
-                  e,
-                  fit: BoxFit.cover,
-                )),
-          ))
-      .toList();
+
   int _current = 0;
 
   @override
@@ -42,7 +26,17 @@ class _AppSliderWidgetState extends State<AppSliderWidget> {
         children: [
           CarouselSlider(
             carouselController: _controller,
-            items: items,
+            items: widget.imgList
+                .map((e) => Padding(
+                      padding: const EdgeInsets.all(AppDimens.medium),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(AppDimens.medium),
+                          child: Image.network(
+                            e.image,
+                            fit: BoxFit.cover,
+                          )),
+                    ))
+                .toList(),
             options: CarouselOptions(
                 autoPlay: true,
                 onPageChanged: (index, reason) {
@@ -53,7 +47,7 @@ class _AppSliderWidgetState extends State<AppSliderWidget> {
           ),
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: imgList
+              children: widget.imgList
                   .asMap()
                   .entries
                   .map((e) => Padding(

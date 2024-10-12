@@ -1,98 +1,132 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:watch_store/components/extention.dart';
 import 'package:watch_store/components/text_style.dart';
-import 'package:watch_store/gen/assets.gen.dart';
+import 'package:watch_store/data/model/product.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
+import 'package:watch_store/utils/format_time.dart';
 
-class ProductItemWidget extends StatelessWidget {
-  const ProductItemWidget({
+class ProductItem extends StatefulWidget {
+  ProductItem({
     super.key,
-    required this.productName,
-    required this.price,
-    this.discount = 0,
-    this.time = 0,
-    this.oldPrice = 0,
+    required this.product,
   });
-  final productName;
-  final price;
-  final oldPrice;
-  final discount;
-  final time;
+  Product product;
+
+  @override
+  State<ProductItem> createState() => _ProductItemState();
+}
+
+class _ProductItemState extends State<ProductItem> {
+  Duration _duration = Duration(seconds: 0);
+  late Timer _timer;
+  int insecond = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _timer = Timer(_duration, () {});
+    if (widget.product.specialExpiration != "") {
+      DateTime now = DateTime.now();
+      DateTime expiration = DateTime.parse(widget.product.specialExpiration);
+      _duration = now.difference(expiration).abs();
+      insecond = _duration.inSeconds;
+      startTimer();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppDimens.small),
-      margin: const EdgeInsets.all(AppDimens.medium),
-      height: 295,
-      width: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppDimens.medium),
-        gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: AppColors.productBgGradiant),
-      ),
-      child: Column(
-        children: [
-          Image.asset(Assets.png.unnamed.path),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              productName,
-              style: AppTextStyles.productTitle,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${985454.separateWithComma} تومان",
-                    style: AppTextStyles.title,
-                  ),
-                  Visibility(
-                    visible: discount > 0 ? true : false,
-                    child: Text(
-                      800000.separateWithComma,
-                      style: AppTextStyles.oldPriceStyle,
+    return GestureDetector(
+      //    onTap: () => Navigator.push(
+      // MaterialPageRoute(
+      //     builder: (context) => ProductSingleScreen(
+      //           id: widget.product.id,
+      //         ))),)
+
+      child: Container(
+        padding: const EdgeInsets.all(AppDimens.small),
+        margin: const EdgeInsets.all(AppDimens.medium),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppDimens.medium),
+            gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: AppColors.productBgGradiant)),
+        width: 200,
+        child: Column(
+          children: [
+            Image.network(widget.product.image),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  widget.product.title,
+                  style: AppTextStyles.productTitle,
+                )),
+            AppDimens.medium.height,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      " ${widget.product.price.separateWithComma} تومان",
+                      style: AppTextStyles.title,
                     ),
-                  ),
-                ],
-              ),
-              Visibility(
-                visible: discount > 0 ? true : false,
-                child: Container(
-                  padding: const EdgeInsets.all(AppDimens.small * .5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                      color: Colors.red),
-                  child: Text("$discount %"),
+                    Visibility(
+                        visible: widget.product.discount > 0 ? true : false,
+                        child: Text(
+                          widget.product.discountPrice.separateWithComma,
+                          style: AppTextStyles.oldPriceStyle,
+                        )),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          AppDimens.large.height,
-          Visibility(
-            visible: time > 0 ? true : false,
-            child: Container(
-              width: double.infinity,
-              height: 2,
-              color: Colors.blue,
+                Visibility(
+                  visible: widget.product.discount > 0 ? true : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(AppDimens.small * .5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(60),
+                        color: Colors.red),
+                    child: Text("${widget.product.discount} %"),
+                  ),
+                )
+              ],
             ),
-          ),
-          AppDimens.medium.height,
-          Visibility(
-            visible: time > 0 ? true : false,
-            child: Text(
-              "12:56:49",
-              style: AppTextStyles.prodTimerStyle,
-            ),
-          )
-        ],
+            AppDimens.large.height,
+            Visibility(
+                visible: _duration.inSeconds > 0 ? true : false,
+                child: Container(
+                  height: 2,
+                  width: double.infinity,
+                  color: Colors.blue,
+                )),
+            AppDimens.medium.height,
+            Visibility(
+                visible: _duration.inSeconds > 0 ? true : false,
+                child: Text(
+                  formatTime(insecond),
+                  style: AppTextStyles.prodTimerStyle,
+                ))
+          ],
+        ),
       ),
     );
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (timer) {
+      setState(() {
+        if (insecond == 0) {
+          debugPrint("product onTap limited");
+        } else {
+          insecond--;
+        }
+      });
+    });
   }
 }

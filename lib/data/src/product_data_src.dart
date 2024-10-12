@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:watch_store/data/constants.dart';
 import 'package:watch_store/data/model/product.dart';
 import 'package:watch_store/utils/response_validator.dart';
@@ -19,8 +20,8 @@ class ProductRemoteDataSrc implements IProductDataSrc {
     final response =
         await httpClient.get(EndPoints.productsByBrand + id.toString());
 
-    HTTPResponseValidator.isValidStatusCode(response.statusCode!);
-    for (var elemnt in (response.data['data'] as List)) {
+    HTTPResponseValidator.isValidStatusCode(response.statusCode??0);
+    for (var elemnt in (response.data['all_products']['data'] as List)) {
       products.add(Product.fromJson(elemnt));
     }
     return products;
@@ -32,8 +33,8 @@ class ProductRemoteDataSrc implements IProductDataSrc {
     final response =
         await httpClient.get(EndPoints.productsByCategory + id.toString());
 
-    HTTPResponseValidator.isValidStatusCode(response.statusCode!);
-    for (var elemnt in (response.data['data'] as List)) {
+    HTTPResponseValidator.isValidStatusCode(response.statusCode??0);
+    for (var elemnt in (response.data['products_by_category']['data'] as List)) {
       products.add(Product.fromJson(elemnt));
     }
     return products;
@@ -44,8 +45,9 @@ class ProductRemoteDataSrc implements IProductDataSrc {
     List<Product> products = <Product>[];
     final response = await httpClient.get(EndPoints.baseUrl + routeParam);
 
-    HTTPResponseValidator.isValidStatusCode(response.statusCode!);
-    for (var elemnt in (response.data['data'] as List)) {
+    HTTPResponseValidator.isValidStatusCode(response.statusCode ?? 0);
+    debugPrint(response.statusCode.toString());
+    for (var elemnt in (response.data['all_products']['data'] as List)) {
       products.add(Product.fromJson(elemnt));
     }
     return products;
@@ -56,8 +58,8 @@ class ProductRemoteDataSrc implements IProductDataSrc {
     List<Product> products = <Product>[];
     final response = await httpClient.get(EndPoints.baseUrl + searchKey);
 
-    HTTPResponseValidator.isValidStatusCode(response.statusCode!);
-    for (var elemnt in (response.data['data'] as List)) {
+    HTTPResponseValidator.isValidStatusCode(response.statusCode??0);
+    for (var elemnt in (response.data['all_products']['data'] as List)) {
       products.add(Product.fromJson(elemnt));
     }
     return products;

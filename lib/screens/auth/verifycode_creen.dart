@@ -9,6 +9,7 @@ import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/res/strings.dart';
 import 'package:watch_store/routes/names.dart';
 import 'package:watch_store/screens/auth/cubit/auth_cubit.dart';
+import 'package:watch_store/utils/format_time.dart';
 import 'package:watch_store/widgets/app_text_field.dart';
 import 'package:watch_store/widgets/main_button_widget.dart';
 
@@ -45,14 +46,6 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
         }
       });
     });
-  }
-
-  String formatTime(int sec) {
-    int min = sec ~/ 60;
-    int seconds = sec % 60;
-    String minStr = min.toString().padLeft(2, "0");
-    String secondsStr = seconds.toString().padLeft(2, "0");
-    return "$minStr:$secondsStr";
   }
 
   @override

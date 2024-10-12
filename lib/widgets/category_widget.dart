@@ -39,7 +39,7 @@ class CategoryWidget extends StatelessWidget {
               children: [
                 SizedBox(
                     height: 60,
-                    child: SvgPicture.asset(
+                    child: Image.network(
                       iconPath,
                     )),
               ],
@@ -48,7 +48,7 @@ class CategoryWidget extends StatelessWidget {
           AppDimens.medium.height,
           Text(
             title,
-            style: AppTextStyles.title.copyWith(fontSize: 16),
+            style: AppTextStyles.title.copyWith(fontSize: 13),
           )
         ],
       ),
