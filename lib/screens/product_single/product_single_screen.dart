@@ -1,92 +1,168 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:watch_store/components/text_style.dart';
+import 'package:watch_store/data/model/product_details.dart';
+import 'package:watch_store/data/repository/cart_repo.dart';
+import 'package:watch_store/data/repository/product_repo.dart';
 import 'package:watch_store/gen/assets.gen.dart';
+import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
+import 'package:watch_store/screens/cart/bloc/cart_bloc.dart';
+import 'package:watch_store/screens/product_list/bloc/product_list_bloc.dart';
+import 'package:watch_store/screens/product_single/bloc/product_single_bloc.dart';
 import 'package:watch_store/widgets/cart_badge_widget.dart';
 import 'package:watch_store/widgets/custom_app_bar_widget.dart';
 
 class ProductSingleScreen extends StatelessWidget {
-  const ProductSingleScreen({super.key});
+  final id;
+  const ProductSingleScreen({super.key, this.id});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      appBar: CustomAppBar(
-          child: Row(
-        children: [
-          const CartBadge(),
-          const Expanded(
-            child: Text(
-              "ساعت مردانه",
-              style: AppTextStyles.productTitle,
-              textDirection: TextDirection.rtl,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(Assets.svg.close),
-          ),
-        ],
-      )),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Image.asset(
-                  Assets.png.unnamed.path,
-                  fit: BoxFit.cover,
-                  width: MediaQuery.sizeOf(context).width,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(AppDimens.medium),
-                  margin: const EdgeInsets.all(AppDimens.medium),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppDimens.medium),
-                      color: Colors.white),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const Text(
-                        "بنسر",
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final productBloc = ProductSingleBloc(productRepository);
+            productBloc.add(ProductSingleInit(id: id));
+            return productBloc;
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            final cartBlog = CartBloc(cartRepository);
+            cartBlog.add(CartCountItemEvent());
+            return cartBlog;
+          },
+        ),
+      ],
+      child: BlocBuilder<ProductSingleBloc, ProductSingleState>(
+        builder: (context, state) {
+          if (state is ProductSingleLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is ProductSingleLoaded) {
+            return SafeArea(
+                child: Scaffold(
+              appBar: CustomAppBar(
+                  child: Row(
+                children: [
+                  ValueListenableBuilder(valueListenable: cartRepository.cartCount, builder: (context, value, child) {
+                    return CartBadge(count: value,);
+                  },),
+                  Expanded(
+                    child: FittedBox(
+                      child: Text(
+                        state.productDetailes.title ?? "",
                         style: AppTextStyles.productTitle,
                         textDirection: TextDirection.rtl,
                       ),
-                      Text(
-                        "ساعت بنسر مدل اکسترا سه موتوره",
-                        style: AppTextStyles.caption,
-                        textDirection: TextDirection.rtl,
-                      ),
-                      const Divider(),
-                      const ProductTabView(),
-                      const SizedBox(height: 60),
-                    ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              width: double.infinity,
-              height: 60,
-              color: Colors.blue,
-            ),
-          )
-        ],
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: SvgPicture.asset(Assets.svg.close),
+                  ),
+                ],
+              )),
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Image.network(
+                          state.productDetailes.image!,
+                          fit: BoxFit.cover,
+                          scale: 1,
+                          //  width: MediaQuery.sizeOf(context).width,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(AppDimens.medium),
+                          margin: const EdgeInsets.all(AppDimens.medium),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(AppDimens.medium),
+                              color: AppColors.mainBg),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                state.productDetailes.brand!,
+                                style: AppTextStyles.productTitle,
+                                textDirection: TextDirection.rtl,
+                              ),
+                              Text(
+                                state.productDetailes.title!,
+                                style: AppTextStyles.caption,
+                                textDirection: TextDirection.rtl,
+                              ),
+                              const Divider(),
+                              ProductTabView(
+                                productDetailes: state.productDetailes,
+                              ),
+                              const SizedBox(height: 60),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  BlocConsumer<CartBloc, CartState>(
+                    listener: (cartContext, cartState) {
+                      if (cartState is CartItemAddedSate) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            duration: Duration(seconds: 1),
+                            backgroundColor: AppColors.success,
+                            content: Text(
+                              "با موفقیت به سبد خرید افزده شد",
+                              style: AppTextStyles.caption
+                                  .copyWith(color: AppColors.onSuccess),
+                              textAlign: TextAlign.center,
+                            )));
+                      }
+                    },
+                    builder: (cartContext, cartState) {
+                      if (cartState is CartLoadingSate) {
+                        return const Positioned(
+                            bottom: 0,
+                            left: 24,
+                            right: 24,
+                            child: LinearProgressIndicator());
+                      }
+                      return Positioned(
+                          bottom: 0,
+                          left: 24,
+                          right: 24,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                BlocProvider.of<CartBloc>(context).add(
+                                    AddToCartEvent(state.productDetailes.id!));
+                              },
+                              child: const Text("افزودن به سبد خرید",
+                                  style: AppTextStyles.mainbuttn)));
+                    },
+                  )
+                ],
+              ),
+            ));
+          } else if (state is ProductSingleErorr) {
+            return const Text("erorr");
+          } else {
+            throw Exception("invalid");
+          }
+        },
       ),
-    ));
+    );
   }
 }
 
 class ProductTabView extends StatefulWidget {
-  const ProductTabView({super.key});
+  final ProductDetailes productDetailes;
+  const ProductTabView({super.key, required this.productDetailes});
 
   @override
   State<ProductTabView> createState() => _ProductTabViewState();
@@ -126,10 +202,12 @@ class _ProductTabViewState extends State<ProductTabView> {
         ),
         IndexedStack(
           index: selectedTabIndex,
-          children: const [
-            Review(),
-            Comments(),
-            Features(),
+          children: [
+            Review(text: widget.productDetailes.discussion!),
+            CommentList(comments: widget.productDetailes.comments!),
+            PropertiesList(
+              properties: widget.productDetailes.properties!,
+            ),
           ],
         )
       ],
@@ -137,29 +215,66 @@ class _ProductTabViewState extends State<ProductTabView> {
   }
 }
 
-class Features extends StatelessWidget {
-  const Features({super.key});
+class PropertiesList extends StatelessWidget {
+  final List<Properties> properties;
+  const PropertiesList({super.key, required this.properties});
 
   @override
   Widget build(BuildContext context) {
-    return const Text("data");
+    return ListView.builder(
+      physics: const ClampingScrollPhysics(),
+      itemCount: properties.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppDimens.medium),
+          margin: const EdgeInsets.all(AppDimens.medium),
+          color: AppColors.surfaceColor,
+          child: Text(
+            "${properties[index].property} : ${properties[index].value}",
+            style: AppTextStyles.caption,
+            textAlign: TextAlign.right,
+          ),
+        );
+      },
+    );
   }
 }
 
 class Review extends StatelessWidget {
-  const Review({super.key});
+  final text;
+  const Review({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Text(text);
   }
 }
 
-class Comments extends StatelessWidget {
-  const Comments({super.key});
+class CommentList extends StatelessWidget {
+  final List<Comments> comments;
+  const CommentList({super.key, required this.comments});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListView.builder(
+      physics: const ClampingScrollPhysics(),
+      itemCount: comments.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppDimens.medium),
+          margin: const EdgeInsets.all(AppDimens.medium),
+          color: AppColors.surfaceColor,
+          child: Text(
+            "${comments[index].user} : ${comments[index].body}",
+            style: AppTextStyles.caption,
+            textAlign: TextAlign.right,
+          ),
+        );
+      },
+    );
   }
 }

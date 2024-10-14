@@ -5,7 +5,7 @@ import 'package:watch_store/routes/routes.dart';
 import 'package:watch_store/screens/auth/cubit/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watch_store/screens/auth/send_sms_screen.dart';
-import 'package:watch_store/screens/mainscreen/cart_page.dart';
+import 'package:watch_store/screens/cart/cart_page.dart';
 import 'package:watch_store/screens/mainscreen/main_screen.dart';
 import 'package:watch_store/utils/shared_preferences_manager.dart';
 

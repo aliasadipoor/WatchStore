@@ -6,6 +6,7 @@ import 'package:watch_store/components/text_style.dart';
 import 'package:watch_store/data/model/product.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
+import 'package:watch_store/screens/product_single/product_single_screen.dart';
 import 'package:watch_store/utils/format_time.dart';
 
 class ProductItem extends StatefulWidget {
@@ -14,7 +15,6 @@ class ProductItem extends StatefulWidget {
     required this.product,
   });
   Product product;
-
   @override
   State<ProductItem> createState() => _ProductItemState();
 }
@@ -40,12 +40,12 @@ class _ProductItemState extends State<ProductItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      //    onTap: () => Navigator.push(
-      // MaterialPageRoute(
-      //     builder: (context) => ProductSingleScreen(
-      //           id: widget.product.id,
-      //         ))),)
-
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductSingleScreen( 
+                    id: widget.product.id,
+                  ))),
       child: Container(
         padding: const EdgeInsets.all(AppDimens.small),
         margin: const EdgeInsets.all(AppDimens.medium),

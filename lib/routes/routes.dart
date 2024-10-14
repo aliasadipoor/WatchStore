@@ -12,5 +12,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   ScreenNames.verifyCodeScreen: (context) => VerifyCodeScreen(),
   ScreenNames.registerScreen: (context) => RegisterScreen(),
   ScreenNames.mainScreen: (context) =>  MainScreen(),
-  ScreenNames.productSingleScreen: (context) => const ProductSingleScreen(),
+  // ScreenNames.productSingleScreen: (context) => const ProductSingleScreen(),
 };

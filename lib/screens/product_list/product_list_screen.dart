@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:watch_store/components/extention.dart';
+import 'package:watch_store/data/repository/cart_repo.dart';
 import 'package:watch_store/data/repository/product_repo.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/dimens.dart';
@@ -30,8 +31,13 @@ class ProductListScreen extends StatelessWidget {
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CartBadge(
-                  count: 5,
+                ValueListenableBuilder(
+                  valueListenable: cartRepository.cartCount,
+                  builder: (context, value, child) {
+                    return CartBadge(
+                      count: value,
+                    );
+                  },
                 ),
                 Row(
                   children: [
@@ -41,7 +47,9 @@ class ProductListScreen extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   icon: SvgPicture.asset(Assets.svg.close),
                 ),
               ],
