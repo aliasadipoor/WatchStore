@@ -7,8 +7,13 @@ class EndPoints {
   static const productsByBrand = "$baseUrl/products_by_brand/";
   static const productsByCategory = "$baseUrl/products_by_category/";
   static const search = "$baseUrl/all_products/";
-    static const home = "$baseUrl/home";
-
+  static const home = "$baseUrl/home";
+  static const productDetails = "$baseUrl/product_details/";
+  static const userCart = "$baseUrl/user_cart";
+  static const addToCart = "$baseUrl/add_to_cart";
+  static const removeFromCart = "$baseUrl/remove_from_cart";
+  static const deleteFromCart = "$baseUrl/delete_from_cart";
+  static const payment = "$baseUrl/payment";
 }
 
 class ProductSortRoutes {
