@@ -19,10 +19,22 @@ final class CartLoadedSate extends CartState {
   const CartLoadedSate(this.cartList);
 }
 
-final class CartItemDeletedSate extends CartState {}
+final class CartItemDeletedSate extends CartState {
+  final List<CartModel> cartList;
 
-final class CartItemRemovedSate extends CartState {}
+  const CartItemDeletedSate(this.cartList);
+}
 
-final class CartItemAddedSate extends CartState {}
+final class CartItemRemovedSate extends CartState {
+  final List<CartModel> cartList;
+
+  const CartItemRemovedSate(this.cartList);
+}
+
+final class CartItemAddedSate extends CartState {
+  final List<CartModel> cartList;
+
+  const CartItemAddedSate(this.cartList);
+}
 
 final class CartCountItemState extends CartState {}

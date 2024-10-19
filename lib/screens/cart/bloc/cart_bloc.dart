@@ -18,17 +18,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         } else if (event is RemoveFromCartEvent) {
           await _iCartRepository
               .removeFromCart(productId: event.productId)
-              .then((value) => emit(CartItemRemovedSate()));
+              .then((value) => emit(CartItemRemovedSate(value)));
         } else if (event is DeleteFromCartEvent) {
           await _iCartRepository
               .deleteFromCart(productId: event.productId)
-              .then((value) => emit(CartItemDeletedSate()));
+              .then((value) => emit(CartItemDeletedSate(value)));
         } else if (event is AddToCartEvent) {
           emit(CartLoadingSate());
 
           await _iCartRepository
               .addToCart(productId: event.productId)
-              .then((value) => emit(CartItemAddedSate()));
+              .then((value) => emit(CartItemAddedSate(value)));
         } else if (event is CartCountItemEvent) {
           emit(CartLoadingSate());
 
