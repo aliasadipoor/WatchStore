@@ -7,34 +7,48 @@ sealed class CartState extends Equatable {
   List<Object> get props => [];
 }
 
-final class CartInitialSate extends CartState {}
+final class CartInitialState extends CartState {}
 
-final class CartLoadingSate extends CartState {}
+final class CartLoadingState extends CartState {}
 
-final class CartErorrSate extends CartState {}
+final class CartErrorState extends CartState {}
 
-final class CartLoadedSate extends CartState {
-  final List<CartModel> cartList;
-
-  const CartLoadedSate(this.cartList);
+final class CartLoadedState extends CartState {
+  final UserCart userCart;
+  const CartLoadedState(this.userCart);
+  @override
+  List<Object> get props => [userCart];
 }
 
-final class CartItemDeletedSate extends CartState {
-  final List<CartModel> cartList;
+final class CartItemDeletedState extends CartState {
+  final UserCart userCart;
+  const CartItemDeletedState(this.userCart);
 
-  const CartItemDeletedSate(this.cartList);
+  @override
+  List<Object> get props => [userCart];
 }
 
-final class CartItemRemovedSate extends CartState {
-  final List<CartModel> cartList;
-
-  const CartItemRemovedSate(this.cartList);
+final class CartItemRemovedState extends CartState {
+  final UserCart userCart;
+  const CartItemRemovedState(this.userCart);
+  @override
+  List<Object> get props => [userCart];
 }
 
-final class CartItemAddedSate extends CartState {
-  final List<CartModel> cartList;
-
-  const CartItemAddedSate(this.cartList);
+final class CartItemAddedState extends CartState {
+  final UserCart userCart;
+  const CartItemAddedState(this.userCart);
+  @override
+  List<Object> get props => [userCart];
 }
 
-final class CartCountItemState extends CartState {}
+final class CartCountState extends CartState {}
+
+final class RecivedPayLinkState extends CartState {
+  final String url;
+
+  const RecivedPayLinkState({required this.url});
+
+  @override
+  List<Object> get props => [url];
+}

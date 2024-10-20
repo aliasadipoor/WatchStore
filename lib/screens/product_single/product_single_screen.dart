@@ -21,23 +21,12 @@ class ProductSingleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) {
-            final productBloc = ProductSingleBloc(productRepository);
-            productBloc.add(ProductSingleInit(id: id));
-            return productBloc;
-          },
-        ),
-        BlocProvider(
-          create: (context) {
-            final cartBlog = CartBloc(cartRepository);
-            cartBlog.add(CartCountItemEvent());
-            return cartBlog;
-          },
-        ),
-      ],
+    return BlocProvider(
+      create: (context) {
+        final productBloc = ProductSingleBloc(productRepository);
+        productBloc.add(ProductSingleInit(id: id));
+        return productBloc;
+      },
       child: BlocBuilder<ProductSingleBloc, ProductSingleState>(
         builder: (context, state) {
           if (state is ProductSingleLoading) {
@@ -50,9 +39,14 @@ class ProductSingleScreen extends StatelessWidget {
               appBar: CustomAppBar(
                   child: Row(
                 children: [
-                  ValueListenableBuilder(valueListenable: cartRepository.cartCount, builder: (context, value, child) {
-                    return CartBadge(count: value,);
-                  },),
+                  ValueListenableBuilder(
+                    valueListenable: cartRepository.cartCount,
+                    builder: (context, value, child) {
+                      return CartBadge(
+                        count: value,
+                      );
+                    },
+                  ),
                   Expanded(
                     child: FittedBox(
                       child: Text(
@@ -113,7 +107,7 @@ class ProductSingleScreen extends StatelessWidget {
                   ),
                   BlocConsumer<CartBloc, CartState>(
                     listener: (cartContext, cartState) {
-                      if (cartState is CartItemAddedSate) {
+                      if (cartState is CartItemAddedState) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             duration: Duration(seconds: 1),
                             backgroundColor: AppColors.success,
@@ -126,7 +120,7 @@ class ProductSingleScreen extends StatelessWidget {
                       }
                     },
                     builder: (cartContext, cartState) {
-                      if (cartState is CartLoadingSate) {
+                      if (cartState is CartLoadingState) {
                         return const Positioned(
                             bottom: 0,
                             left: 24,

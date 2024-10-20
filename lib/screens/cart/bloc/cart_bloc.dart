@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watch_store/data/model/cart.dart';
 import 'package:watch_store/data/repository/cart_repo.dart';
 
@@ -7,37 +7,38 @@ part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  final ICartRepository _iCartRepository;
-  CartBloc(this._iCartRepository) : super(CartInitialSate()) {
+  final ICartRepository _cartRepository;
+
+  CartBloc(this._cartRepository) : super(CartInitialState()) {
     on<CartEvent>((event, emit) async {
       try {
-        if (event is cartInitEvent) {
-          emit(CartLoadingSate());
-          final cartList = await _iCartRepository.getUserCart();
-          emit(CartLoadedSate(cartList));
+        if (event is CartInitEvent) {
+          emit(CartLoadingState());
+          final userCart = await _cartRepository.getUserCart();
+          emit(CartLoadedState(userCart));
         } else if (event is RemoveFromCartEvent) {
-          await _iCartRepository
+          await _cartRepository
               .removeFromCart(productId: event.productId)
-              .then((value) => emit(CartItemRemovedSate(value)));
-        } else if (event is DeleteFromCartEvent) {
-          await _iCartRepository
+              .then((value) => emit(CartItemRemovedState(value)));
+        } else if (event is DeleteFromCart) {
+          await _cartRepository
               .deleteFromCart(productId: event.productId)
-              .then((value) => emit(CartItemDeletedSate(value)));
+              .then((value) => emit(CartItemDeletedState(value)));
         } else if (event is AddToCartEvent) {
-          emit(CartLoadingSate());
-
-          await _iCartRepository
+          await _cartRepository
               .addToCart(productId: event.productId)
-              .then((value) => emit(CartItemAddedSate(value)));
-        } else if (event is CartCountItemEvent) {
-          emit(CartLoadingSate());
-
-          await _iCartRepository
-              .countCartItem()
-              .then((value) => emit(CartCountItemState()));
+              .then((value) => emit(CartItemAddedState(value)));
+        } else if (event is CartItemCountEvent) {
+          await _cartRepository
+              .countCartItems()
+              .then((value) => emit(CartCountState()));
+        } else if (event is PayEvent) {
+          await _cartRepository
+              .payCart()
+              .then((value) => emit(RecivedPayLinkState(url: value)));
         }
       } catch (e) {
-        emit(CartErorrSate());
+        emit(CartErrorState());
       }
     });
   }
