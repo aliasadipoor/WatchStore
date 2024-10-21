@@ -10,7 +10,6 @@ import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/screens/cart/bloc/cart_bloc.dart';
-import 'package:watch_store/screens/product_list/bloc/product_list_bloc.dart';
 import 'package:watch_store/screens/product_single/bloc/product_single_bloc.dart';
 import 'package:watch_store/widgets/cart_badge_widget.dart';
 import 'package:watch_store/widgets/custom_app_bar_widget.dart';

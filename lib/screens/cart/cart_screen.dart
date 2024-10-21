@@ -99,7 +99,7 @@ class CartScreen extends StatelessWidget {
                 break;
               case CartErrorState:
                 return const Text('error');
-              case CartLoadingState:
+              case CartLoadingState:  
                 return const LinearProgressIndicator();
 
               default:
@@ -112,8 +112,8 @@ class CartScreen extends StatelessWidget {
                   onTap: () =>
                       BlocProvider.of<CartBloc>(context).add(PayEvent()),
                   child: Container(
-                    padding: EdgeInsets.all(AppDimens.medium),
-                    margin: EdgeInsets.all(AppDimens.medium),
+                    padding: const EdgeInsets.all(AppDimens.medium),
+                    margin: const EdgeInsets.all(AppDimens.medium),
                     decoration: const BoxDecoration(
                         color: AppColors.surfaceColor,
                         borderRadius: BorderRadius.all(
@@ -152,7 +152,7 @@ class CartScreen extends StatelessWidget {
               }
             }
           })
-        ],
+        ], 
       ),
     ));
   }

@@ -9,7 +9,6 @@ import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/screens/product_list/bloc/product_list_bloc.dart';
 import 'package:watch_store/widgets/cart_badge_widget.dart';
 import 'package:watch_store/widgets/custom_app_bar_widget.dart';
-import 'package:watch_store/widgets/product_gridview_wiget.dart';
 import 'package:watch_store/widgets/product_item_widget.dart';
 import 'package:watch_store/widgets/tag_list_widget.dart';
 
@@ -56,7 +55,7 @@ class ProductListScreen extends StatelessWidget {
             )),
             body: Column(
               children: [
-                TagList(),
+                const TagList(),
                 BlocBuilder<ProductListBloc, ProductListState>(
                   builder: (context, state) {
                     if (state is ProductListLoading) {

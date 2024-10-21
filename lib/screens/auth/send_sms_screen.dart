@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watch_store/components/extention.dart';
 import 'package:watch_store/gen/assets.gen.dart';
@@ -14,7 +13,7 @@ class SendSmsScreen extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
           child: SizedBox(

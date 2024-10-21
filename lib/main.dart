@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_store/components/themes.dart';
 import 'package:watch_store/data/repository/cart_repo.dart';
-import 'package:watch_store/routes/names.dart';
 import 'package:watch_store/routes/routes.dart';
 import 'package:watch_store/screens/auth/cubit/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
