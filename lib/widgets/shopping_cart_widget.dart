@@ -41,7 +41,7 @@ class ShopingCartWidget extends StatelessWidget {
                     onPressed: delete,
                     icon: SvgPicture.asset(Assets.svg.delete),
                   ),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                   IconButton(
                     onPressed: remove,
                     icon: SvgPicture.asset(Assets.svg.minus),

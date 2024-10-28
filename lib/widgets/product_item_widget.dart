@@ -20,7 +20,7 @@ class ProductItem extends StatefulWidget {
 }
 
 class _ProductItemState extends State<ProductItem> {
-  Duration _duration = Duration(seconds: 0);
+  Duration _duration = const Duration(seconds: 0);
   late Timer _timer;
   int insecond = 0;
   @override
